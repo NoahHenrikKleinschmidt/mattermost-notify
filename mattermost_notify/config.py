@@ -74,6 +74,7 @@ def setup_config(url: str, team_name: str, token: str, directory: str = None):
     """
     if directory is None:
         directory = DEFAULT_HOME_LOCATION
+    directory = Path(directory)
     with open(directory / CONFIGFILENAME, "w") as file:
         file.write(f"URL={url}\n")
         file.write(f"TEAM_NAME={team_name}\n")
