@@ -74,8 +74,13 @@ def setup_config(url: str, team_name: str, token: str, directory: str = None):
     """
     if directory is None:
         directory = DEFAULT_HOME_LOCATION
-    if "$HOME" in directory:
-        directory = Path(directory.replace("$HOME", str(DEFAULT_HOME_LOCATION)))
+    if isinstance(directory, str):
+        if "$HOME" in directory:
+            directory = directory.replace("$HOME", str(DEFAULT_HOME_LOCATION))
+        if "~" in directory:
+            directory = directory.replace("~", str(DEFAULT_HOME_LOCATION))
+        if "$PWD" in directory:
+            directory = directory.replace("$PWD", str(Path.cwd()))
     directory = Path(directory)
     with open(directory / CONFIGFILENAME, "w") as file:
         file.write(f"URL={url}\n")
