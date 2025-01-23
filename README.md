@@ -7,10 +7,9 @@
 
 [![Made with Python](https://img.shields.io/badge/Python->=3.8-blue?logo=python&logoColor=white)](https://python.org "Go to Python homepage")
 [![code style - black](https://img.shields.io/badge/code_style-black-black)](https://black.readthedocs.io/ "Go to Black homepage")
-![Read the Docs](https://img.shields.io/readthedocs/mattermost-notify)
+[![Read the Docs](https://readthedocs.org/projects/mattermost-notify/badge/?version=latest)](https://mattermost-notify.readthedocs.io/en/latest/)
 ![Mattermost](https://img.shields.io/badge/Mattermost-%3E=9-gray?labelColor=blue&style=flat)
 ![Mattermost-API](https://img.shields.io/badge/Mattermost--API-v4-gray?labelColor=blue&style=flat) 
-
 
 
 ## Installation
