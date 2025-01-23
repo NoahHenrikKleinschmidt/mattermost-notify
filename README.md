@@ -17,6 +17,7 @@
 
 > First make sure to set up a Bot account on your Mattermost Server with the name `notify`. Follow the [Documentation](https://mattermost-notify.readthedocs.io/en/latest/setup_bot.html) to learn how. 
 
+
 If you have your `notify`Bot account set up correctly and you have got it's access token you can install the client package using:
 
 ```bash
