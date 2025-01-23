@@ -7,7 +7,8 @@ setup(
     packages=find_packages(),
     install_requires=[
         # Add your dependencies here
-        "requests"
+        "requests",
+        "argparse"
     ],
     entry_points={
         'console_scripts': [
