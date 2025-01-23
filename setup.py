@@ -5,7 +5,7 @@ setup(
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
     package_dir={'': '.'},
-    version='0.1.0',
+    version='0.1.1',
     packages=find_packages(),
     install_requires=[
         # Add your dependencies here
