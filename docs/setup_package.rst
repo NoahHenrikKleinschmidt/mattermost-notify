@@ -19,7 +19,8 @@ The package can be installed via pip:
 
 .. code:: bash
    
-   pip install mattermost-notify
+   # (yep it's in reverse since another project already used the name on PyPi 😅)
+   pip install notify-mattermost
 
 
 2. Set up the connection to your Mattermost server

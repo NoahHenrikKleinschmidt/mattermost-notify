@@ -21,7 +21,8 @@
 If you have your `notify`Bot account set up correctly and you have got it's access token you can install the client package using:
 
 ```bash
-pip install mattermost-notify
+# (yep it's in reverse since another project already used the name on PyPi 😅)
+pip install notify-mattermost
 ```
 
 Then set up the connection using: 
