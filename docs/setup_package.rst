@@ -8,7 +8,7 @@ Set up Mattermost Notify
 
 If you have not set up the Notify Bot yet, please refer to the `Notify Bot Setup`_ documentation.
 
-.. _Notify Bot Setup: setup_notify
+.. _Notify Bot Setup: setup_bot
 
 Once you have your Bot ready you can start using the Mattermost Notify package.
 

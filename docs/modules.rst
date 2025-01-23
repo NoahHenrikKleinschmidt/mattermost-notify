@@ -1,4 +1,4 @@
-mattermost_notify
+API Documentation
 =================
 
 .. toctree::
