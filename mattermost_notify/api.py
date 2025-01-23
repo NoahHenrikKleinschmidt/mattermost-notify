@@ -17,7 +17,35 @@ __default_channel = None
 The default channel to send messages to
 """
 
-def wakeup_notify(always_send_to_user: str = None, always_send_to_channel: str = None, config: dict = None) -> Notify:
+def notify(message: str, user_name: str = None, channel_name: str = None, files: list = None):
+    """
+    Send a message to a user or channel (only one of the two can be specified in one call)
+
+    Parameters
+    ----------
+    message : str
+        The message to send
+    user_name : str
+        The name of the user to send the message to
+    channel_name : str
+        The name of the channel to send the message to
+    files: list
+        A list of file paths of files to upload  to the user-chat
+    """
+    if not user_name and not channel_name:
+        if __default_user:
+            user_name = __default_user
+        elif __default_channel:
+            channel_name = __default_channel
+    
+    if user_name:
+        notify_user(message, user_name, files)
+    elif channel_name:
+        notify_channel(message, channel_name, files)
+    else:
+        raise ValueError("No user or channel specified")
+
+def wakeup(always_send_to_user: str = None, always_send_to_channel: str = None, config: dict = None) -> Notify:
     """
     Create a Notify client
 
@@ -63,7 +91,7 @@ def notify_channel(message: str, channel_name: str=None, files: list = None):
         A list of file paths of files to upload  to the channel
     """
     if __notify is None:
-        wakeup_notify()
+        wakeup()
     if channel_name is None and __default_channel is None:
         raise ValueError("No channel specified and no default channel set")
     if channel_name is None:
@@ -84,11 +112,11 @@ def notify_user(message: str, user_name: str = None, files: list = None):
         A list of file paths of files to upload  to the user-chat
     """
     if __notify is None:
-        wakeup_notify()
+        wakeup()
     if user_name is None and __default_user is None:
         raise ValueError("No user specified and no default user set")
     if user_name is None:
         user_name = __default_user
     __notify.send_to_user(message, user_name=user_name, files=files)
 
-__all__ = ["wakeup_notify", "notify_channel", "notify_user"]
+__all__ = ["wakeup", "notify_channel", "notify_user", "notify"]

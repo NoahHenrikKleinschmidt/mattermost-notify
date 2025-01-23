@@ -21,9 +21,9 @@ dest = send.add_argument_group("Send to", "Send the message to a channel or user
 dest.add_argument("-c", "--channel", help="The name of the channel to send the message to. The 'notify' bot needs to have access to or be added to the channel!")
 dest.add_argument("-u", "--user", help="The name of the user to send the message to.")
 dest.add_argument("-f", "--files", help="The path(s) to file(s) to send as an attachment.", nargs="+", default=None)
-dest.add_argument("--configfile", help="The path to the directory where the .mattermost_notify file is stored. By default Mattermost Notify will search in either $PWD or $HOME", default=None)
+dest.add_argument("--configfile", help="The path to a .mattermost_notify file or a directory containing such a file. By default Mattermost Notify will search in either $PWD or $HOME", default=None)
 
-test.add_argument("--configfile", help="The path to the directory where the .mattermost_notify file is stored. By default Mattermost Notify will search in either $PWD or $HOME", default=None)
+test.add_argument("--configfile", help="The path to a .mattermost_notify file or a directory containing such a file. By default Mattermost Notify will search in either $PWD or $HOME", default=None)
 
 def main():
     args = parser.parse_args()

@@ -49,7 +49,6 @@ class Notify:
         response = requests.get(self.endpoint("users"), headers=self.headers)
         try:
             response_json = response.json()
-            print(response_json)  # Print the JSON content for debugging
             return response.status_code == 200
         except requests.exceptions.JSONDecodeError:
             print("Failed to decode JSON response")

@@ -22,6 +22,8 @@ def search_config(path: Path = None):
     Path
         The path to the configuration file
     """
+    if path is not None and Path(path).name == CONFIGFILENAME:
+        return Path(path)
     if path is None:
         path = Path.cwd()
     if (path / CONFIGFILENAME).exists():
