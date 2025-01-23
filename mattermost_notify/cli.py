@@ -34,6 +34,8 @@ def main():
             setup_config_interactive()
         else:
             from mattermost_notify.config import setup_config
+            if args.output == "$HOME":
+                args.output = None
             setup_config(args.url, args.team_name, args.token, args.output)
     
     
