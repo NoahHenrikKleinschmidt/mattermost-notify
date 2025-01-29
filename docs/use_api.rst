@@ -92,3 +92,93 @@ Here is an example:
 
 
 
+Updating Messages
+-----------------
+
+You can update messages that have been sent before in order to keep the chat cleaner while still up to date.
+In order to update a message it needs to be given an `id` when it is sent. This can be done by providing the `id` keyword to 
+any of the sending functions or methods. To update it later you can either use the `send_update` function, the `notify` function or the `Notify.send_update` method, depending on what setup you are using.
+
+Here is an example:
+
+.. code:: python
+
+   # send a message to a user and provide an id
+   notify.notify_user("Hello World!", "your_username", id="my-test-message")
+
+   # update the message
+   notify.send_update("Hello World! (updated)", id="my-test-message")
+
+
+The `notify` function automates this process by checking if a provided id has already been used and if so, updates the message instead of sending a new one.
+
+.. code:: python
+
+   # send a message to a user and provide an id
+   notify.notify("Hello World!", user_name="your_username", id="my-test-message")
+
+   # update the message
+   notify.notify("Hello World! (updated)", id="my-test-message")
+
+
+The `Notify` class mimics the behavior of the `send_update` function.
+
+.. code:: python
+
+   # send a message to a user and provide an id
+   client.send_to_user("Hello World!", "your_username", id="my-test-message")
+
+   # update the message
+   client.send_update("Hello World! (updated)", id="my-test-message")
+
+
+By default the message cache is linked to one specific instance of the `Notify` class. Therefore you can by default only update messages
+within the _same_ session! Hence it is advisable to integrate the notifications into the same script or jupyter notebook that you want to monitor. 
+However, you can also update messages accross different sessions if you absolutely want to. To do so you will have to export the message hook you want to update
+to a file and then in the new session (i.e. with the new `Notify` client) read that file. Then you are able to use `send_update` again as before.
+
+Here's an example:
+
+.. code:: python
+
+   # send a message to a user and provide an id
+   notify.notify_user("Hello World!", "your_username", id="my-test-message")
+
+   # export the message hook to a file
+   notify.export_hook("my-test-message", "my-test-message.msg")
+
+   # -----------------  
+   # in a new session
+   # -----------------
+   notify.wakeup()
+
+   # read the message hook from the file
+   notify.import_hook("my-test-message.msg")
+
+   # update the message
+   notify.send_update("Hello World! (updated)", id="my-test-message")
+
+
+or with the actual methods from the `Notify` class:
+
+.. code:: python
+
+   client = notify.Notify(token="your_token", url="your_server_url", team_name="your_team_name")
+
+   # send a message to a user and provide an id
+   client.send_to_user("Hello World!", "your_username", id="my-test-message")
+
+   # export the message hook to a file
+   client.write_message_hook_to_file("my-test-message", "my-test-message.msg")
+
+   # -----------------  
+   # in a new session
+   # -----------------
+   other_client = notify.Notify(token="your_token", url="your_server_url", team_name="your_team_name")
+   
+   # read the message hook from the file
+   other_client.read_message_hook_from_file("my-test-message.msg")
+
+   # update the message
+   other_client.send_update("Hello World! (updated)", id="my-test-message")
+   

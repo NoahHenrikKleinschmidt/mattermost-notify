@@ -116,7 +116,7 @@ def main():
             )
 
         if args.save_hook:
-            client.write_message_to_file(id=msg_id, filename=args.save_hook)
+            client.write_message_hook_to_file(id=msg_id, filename=args.save_hook)
 
     elif args.command == "update":
         from mattermost_notify.client import Notify
@@ -129,7 +129,7 @@ def main():
         with open(args.hook, "r") as file:
             file.readline()
             msg_id = file.readline().strip()
-        client.read_message_from_file(args.hook)
+        client.read_message_hook_from_file(args.hook)
         client.send_update(message=args.message, id=msg_id)
 
     elif args.command == "test":

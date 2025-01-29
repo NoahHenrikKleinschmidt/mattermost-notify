@@ -27,6 +27,34 @@ For example:
 
 The command will send the message to the `simulations` channel and upload the file `logfile.txt` to the channel.
 
+Updating Messages
+-----------------
+
+You can update messages that you have sent previously. This is easier to do in the Python API so consider integrating your monitoring directly into long-running scripts or jupyter notebooks!
+If you cannot avoid using the CLI then here is how you can update a message:
+
+1. Send a message and save the message hook to a file using the `-s <filename>` or `--save-hook <filename>`. This will create a file that another Mattermost Notify client can read in order to 
+   update the message.
+2. Update the message using the `update` command (instead of `send`)
+
+
+Taken together, the process looks like this:
+
+.. code:: bash
+
+   # some data to send and keep up to date
+   progress=$(tail -n 1 /path/to/simulations/progress.txt)
+
+   # first send a message and provide a filename to save the message hook
+   mattermost-notify send "Simulation progress: $progress" --channel simulations --save-hook simulation_progress.msg
+
+   # wait for a while
+   sleep 10
+
+   # and update the message
+   progress=$(tail -n 1 /path/to/simulations/progress.txt)
+   mattermost-notify update "Simulation progress: $progress" --hook simulation_progress.msg
+
 
 Specifying a Configuration File
 -------------------------------
