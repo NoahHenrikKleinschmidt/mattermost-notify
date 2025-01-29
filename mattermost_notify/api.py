@@ -166,4 +166,46 @@ def send_update(message: str, id: str):
     __notify.send_update(message, id)
 
 
-__all__ = ["wakeup", "notify_channel", "notify_user", "notify", "send_update"]
+def export_hook(id: str, filename: str):
+    """
+    Export a message hook to a file
+
+    Parameters
+    ----------
+    id : str
+        The identifier of the message to export the hook of
+    filename : str
+        The filename to export the hook to
+    """
+    if __notify is None:
+        raise ValueError(
+            "No Notify client set up that could be used to export a message hook"
+        )
+    __notify.write_message_to_file(id=id, filename=filename)
+
+
+def import_hook(filename: str):
+    """
+    Import a message hook from a file
+
+    Parameters
+    ----------
+    filename : str
+        The filename to import the hook from
+    """
+    if __notify is None:
+        raise ValueError(
+            "No Notify client set up that could be used to import a message hook"
+        )
+    __notify.read_message_from_file(filename)
+
+
+__all__ = [
+    "wakeup",
+    "notify_channel",
+    "notify_user",
+    "notify",
+    "send_update",
+    "export_hook",
+    "import_hook",
+]
