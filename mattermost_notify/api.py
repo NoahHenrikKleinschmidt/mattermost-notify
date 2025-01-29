@@ -1,4 +1,3 @@
-
 from .client import Notify
 from .config import get_config
 
@@ -17,7 +16,14 @@ __default_channel = None
 The default channel to send messages to
 """
 
-def notify(message: str, user_name: str = None, channel_name: str = None, files: list = None):
+
+def notify(
+    message: str,
+    user_name: str = None,
+    channel_name: str = None,
+    files: list = None,
+    id: str = None,
+):
     """
     Send a message to a user or channel (only one of the two can be specified in one call)
 
@@ -31,21 +37,33 @@ def notify(message: str, user_name: str = None, channel_name: str = None, files:
         The name of the channel to send the message to
     files: list
         A list of file paths of files to upload  to the user-chat
+    id: str
+        An identifier for the message in case you want to update it later. If a message with the same
+        id was sent before the message will be automatically updated.
     """
+    if id is not None and __notify is not None and __notify.message_in_cache(id):
+        send_update(message, id)
+        return
+
     if not user_name and not channel_name:
         if __default_user:
             user_name = __default_user
         elif __default_channel:
             channel_name = __default_channel
-    
+
     if user_name:
-        notify_user(message, user_name, files)
+        notify_user(message, user_name=user_name, files=files, id=id)
     elif channel_name:
-        notify_channel(message, channel_name, files)
+        notify_channel(message, channel_name=channel_name, files=files, id=id)
     else:
         raise ValueError("No user or channel specified")
 
-def wakeup(always_send_to_user: str = None, always_send_to_channel: str = None, config: dict = None) -> Notify:
+
+def wakeup(
+    always_send_to_user: str = None,
+    always_send_to_channel: str = None,
+    config: dict = None,
+) -> Notify:
     """
     Create a Notify client
 
@@ -62,13 +80,13 @@ def wakeup(always_send_to_user: str = None, always_send_to_channel: str = None, 
     if config is None:
         config = get_config()
     client = Notify(
-        url=config["url"],
-        team_name=config["team_name"],
-        token=config["token"]
+        url=config["url"], team_name=config["team_name"], token=config["token"]
     )
     __notify = client
     if always_send_to_user and always_send_to_channel:
-        raise ValueError("Default settings are mutually exclusive! Cannot send to both a user and a channel")
+        raise ValueError(
+            "Default settings are mutually exclusive! Cannot send to both a user and a channel"
+        )
     if always_send_to_user:
         global __default_user
         __default_user = always_send_to_user
@@ -77,7 +95,10 @@ def wakeup(always_send_to_user: str = None, always_send_to_channel: str = None, 
         __default_channel = always_send_to_channel
     return client
 
-def notify_channel(message: str, channel_name: str=None, files: list = None):
+
+def notify_channel(
+    message: str, channel_name: str = None, files: list = None, id: str = None
+):
     """
     Send a message to a channel
 
@@ -89,6 +110,8 @@ def notify_channel(message: str, channel_name: str=None, files: list = None):
         The name of the channel to send the message to
     files: list
         A list of file paths of files to upload  to the channel
+    id: str
+        An identifier for the message in case you want to update it later.
     """
     if __notify is None:
         wakeup()
@@ -96,9 +119,12 @@ def notify_channel(message: str, channel_name: str=None, files: list = None):
         raise ValueError("No channel specified and no default channel set")
     if channel_name is None:
         channel_name = __default_channel
-    __notify.send_to_channel(message, channel_name=channel_name, files=files)
+    __notify.send_to_channel(message, channel_name=channel_name, files=files, id=id)
 
-def notify_user(message: str, user_name: str = None, files: list = None):
+
+def notify_user(
+    message: str, user_name: str = None, files: list = None, id: str = None
+):
     """
     Send a message to a user
 
@@ -110,6 +136,8 @@ def notify_user(message: str, user_name: str = None, files: list = None):
         The name of the user to send the message to
     files: list
         A list of file paths of files to upload  to the user-chat
+    id: str
+        An identifier for the message in case you want to update it later.
     """
     if __notify is None:
         wakeup()
@@ -117,6 +145,25 @@ def notify_user(message: str, user_name: str = None, files: list = None):
         raise ValueError("No user specified and no default user set")
     if user_name is None:
         user_name = __default_user
-    __notify.send_to_user(message, user_name=user_name, files=files)
+    __notify.send_to_user(message, user_name=user_name, files=files, id=id)
 
-__all__ = ["wakeup", "notify_channel", "notify_user", "notify"]
+
+def send_update(message: str, id: str):
+    """
+    Update a message
+
+    Parameters
+    ----------
+    message : str
+        The new message
+    id : str
+        The identifier of the message to update that was sent when sending the message initially
+    """
+    if __notify is None:
+        raise ValueError(
+            "No Notify client set up that could be used to update a message"
+        )
+    __notify.update(message, id)
+
+
+__all__ = ["wakeup", "notify_channel", "notify_user", "notify", "send_update"]

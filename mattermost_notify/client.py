@@ -104,6 +104,22 @@ class Notify:
         """
         return f"{self._api_url}/{path}"
 
+    def message_in_cache(self, id: str) -> bool:
+        """
+        Check if a message with a given ID is in the cache
+
+        Parameters
+        ----------
+        id : str
+            The ID to check
+
+        Returns
+        -------
+        bool
+            True if the message is in the cache
+        """
+        return id in self.__cache["sent_messages"]
+
     @property
     def headers(self):
         return {
