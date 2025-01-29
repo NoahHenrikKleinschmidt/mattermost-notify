@@ -128,12 +128,12 @@ def test_read_and_write_message_files():
     client.send_to_channel("Hello, World!", id="test")
     assert client.message_in_cache("test")
 
-    client.write_message_to_file("test", "tests/test_message.msg")
+    client.write_message_hook_to_file("test", "tests/test_message.msg")
 
     client2 = notify.Notify(**config)
     assert not client2.message_in_cache("test")
 
-    client2.read_message_from_file("tests/test_message.msg")
+    client2.read_message_hook_from_file("tests/test_message.msg")
     assert client2.message_in_cache("test")
 
     from time import sleep

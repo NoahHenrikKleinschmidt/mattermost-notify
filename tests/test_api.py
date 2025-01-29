@@ -107,3 +107,28 @@ def test_send_update_with_toplevel_notify():
     )
     sleep(3)
     notify.notify("Hello, World /toplevel ! twice", id="test")
+
+
+def test_export_and_import_hooks():
+
+    import mattermost_notify as notify
+    from time import sleep
+
+    notify.wakeup(config=config)
+    notify.notify_channel(
+        "Hello, World! from api original", channel_name=test_channel_name, id="test"
+    )
+    notify.export_hook("test", "tests/test_hook.msg")
+
+    sleep(3)
+
+    # initialize new client
+    notify.wakeup(config=config)
+    notify.import_hook("tests/test_hook.msg")
+
+    notify.send_update("Hello, World! from api updated", id="test")
+
+    import os
+
+    if os.path.exists("tests/test_hook.msg"):
+        os.remove("tests/test_hook.msg")

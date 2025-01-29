@@ -181,7 +181,7 @@ def export_hook(id: str, filename: str):
         raise ValueError(
             "No Notify client set up that could be used to export a message hook"
         )
-    __notify.write_message_to_file(id=id, filename=filename)
+    __notify.write_message_hook_to_file(id=id, filename=filename)
 
 
 def import_hook(filename: str):
@@ -197,7 +197,7 @@ def import_hook(filename: str):
         raise ValueError(
             "No Notify client set up that could be used to import a message hook"
         )
-    __notify.read_message_from_file(filename)
+    __notify.read_message_hook_from_file(filename)
 
 
 __all__ = [

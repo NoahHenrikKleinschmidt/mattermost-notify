@@ -134,7 +134,7 @@ class Notify:
         """
         return id in self.__cache["sent_messages"]
 
-    def write_message_to_file(self, id: str, filename: str):
+    def write_message_hook_to_file(self, id: str, filename: str):
         """
         Write a message-hook from cache to file so that it can be loaded and updated even from another client instance.
 
@@ -147,7 +147,7 @@ class Notify:
         """
         self.__cache["sent_messages"][id].write_to_file(filename)
 
-    def read_message_from_file(self, filename: str):
+    def read_message_hook_from_file(self, filename: str):
         """
         Read a message-hook from a file so that it can be updated.
 
