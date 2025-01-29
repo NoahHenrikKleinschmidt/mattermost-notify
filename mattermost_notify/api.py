@@ -163,7 +163,7 @@ def send_update(message: str, id: str):
         raise ValueError(
             "No Notify client set up that could be used to update a message"
         )
-    __notify.update(message, id)
+    __notify.send_update(message, id)
 
 
 __all__ = ["wakeup", "notify_channel", "notify_user", "notify", "send_update"]

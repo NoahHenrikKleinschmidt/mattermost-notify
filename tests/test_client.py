@@ -116,4 +116,31 @@ def test_can_update_message():
     from time import sleep
 
     sleep(4)
-    assert client.update("Hello, World! Updated **", id="test_message")
+    assert client.send_update("Hello, World! Updated **", id="test_message")
+
+
+def test_read_and_write_message_files():
+    import mattermost_notify as notify
+
+    client = notify.Notify(**config)
+    client.set_default_channel(test_channel_name)
+
+    client.send_to_channel("Hello, World!", id="test")
+    assert client.message_in_cache("test")
+
+    client.write_message_to_file("test", "tests/test_message.msg")
+
+    client2 = notify.Notify(**config)
+    assert not client2.message_in_cache("test")
+
+    client2.read_message_from_file("tests/test_message.msg")
+    assert client2.message_in_cache("test")
+
+    from time import sleep
+
+    sleep(2)
+    client2.send_update("Hello, World! from another client", id="test")
+
+    import os
+
+    os.remove("tests/test_message.msg")

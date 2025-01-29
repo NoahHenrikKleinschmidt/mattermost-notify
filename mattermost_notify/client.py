@@ -7,11 +7,14 @@ from pathlib import Path
 
 
 class MessageUpdator:
-    def __init__(self, text: str, client: "Notify", channel_id: str, message_id: str):
+    def __init__(
+        self, text: str, client: "Notify", channel_id: str, message_id: str, id: str
+    ):
         self.client = client
         self.channel_id = channel_id
         self.message_id = message_id
         self.text = text
+        self.id = id
 
     def update(self, message: str):
         data = {
@@ -26,6 +29,17 @@ class MessageUpdator:
         )
         self.text = message
         return response.status_code == 200
+
+    def write_to_file(self, filename):
+        with open(filename, "w") as f:
+            f.write(
+                f"""
+[Mattermost-Notify Message Hook]
+{self.id}
+{self.channel_id}
+{self.message_id}
+                    """.strip()
+            )
 
 
 class PermissionError(Exception):
@@ -119,6 +133,37 @@ class Notify:
             True if the message is in the cache
         """
         return id in self.__cache["sent_messages"]
+
+    def write_message_to_file(self, id: str, filename: str):
+        """
+        Write a message-hook from cache to file so that it can be loaded and updated even from another client instance.
+
+        Parameters
+        ----------
+        id : str
+            The ID of the message
+        filename : str
+            The name of the file to write to
+        """
+        self.__cache["sent_messages"][id].write_to_file(filename)
+
+    def read_message_from_file(self, filename: str):
+        """
+        Read a message-hook from a file so that it can be updated.
+
+        Parameters
+        ----------
+        filename : str
+            The name of the file to read from
+        """
+        with open(filename, "r") as f:
+            lines = f.readlines()
+        id = lines[1].strip()
+        channel_id = lines[2].strip()
+        message_id = lines[3].strip()
+        self.__cache["sent_messages"][id] = MessageUpdator(
+            "", self, channel_id, message_id, id
+        )
 
     @property
     def headers(self):
@@ -324,7 +369,7 @@ class Notify:
 
         if id:
             self.__cache["sent_messages"][id] = MessageUpdator(
-                message, self, channel_id, response.json()["id"]
+                message, self, channel_id, response.json()["id"], id
             )
 
         return response.status_code == 201
@@ -366,12 +411,12 @@ class Notify:
 
         if id:
             self.__cache["sent_messages"][id] = MessageUpdator(
-                message, self, channel_id, response.json()["id"]
+                message, self, channel_id, response.json()["id"], id
             )
 
         return response.status_code == 201
 
-    def update(
+    def send_update(
         self,
         message: str,
         id: str,
